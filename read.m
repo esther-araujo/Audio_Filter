@@ -1,6 +1,6 @@
 % audioread: lê arquivo e retorna os dados de audio 
 % e a frequencia de amostragem do sinal (em Hz)
-% No caso do arquiovo de entrada, Fs = 44,1 KHz
+% No caso do arquivo de entrada, Fs = 44,1 KHz
 [y,Fs] = audioread('SinalRuidoso.wav');
 
 % os dados do audio (y) são armazenados como uma matriz com linhas
