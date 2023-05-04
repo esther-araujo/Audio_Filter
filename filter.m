@@ -33,7 +33,7 @@ y2 = fftshift(y);
 
 subplot(3,1,2);
 plot(w, abs(y2)); grid on; 
-title('Espectro de Frequencia')
+title('Espectro de Frequencia - Sinal Ruidoso')
 xlabel('Frequency(Hz)')
 ylabel('Amplitude');
 
@@ -41,10 +41,20 @@ ylabel('Amplitude');
 %sound(y,Fs);
 
 %Filtro
-fc = 3750;
-wc = (2*pi*fc)/Fs; % frequência de corte (em rad)
-h = hamming(wc);
+fbp = 2100; % limite banda passante
+fbt = 3700; % limite da banda de transição
+ft = fbt - fbp; % faixa de transição
+fc = (fbt + fbp) /2; %freq de corte
 
+% Janela
+wt = (2*pi*fbt)/Fs; % Transição em rads
+wp = (2*pi*fbp)/Fs; % Passagem em rads
+wc = (wt+wp)/2; % Corte em rads
+Bw = abs((wt - wp))/(2*pi); % Lóbulo principal
+N  = ceil(3.3/(Bw));   % Comprimento da janela
+M  = N-1;              % Ordem do Filtro;
+
+h = hamming(wc, M);
 yFiltrado = conv(f, h);
 sound(yFiltrado, Fs);
 n = size(yFiltrado,1);
@@ -54,6 +64,9 @@ Y = fft(yFiltrado) / N;
 Yfreq = fftshift(Y);
 subplot(3,1,3);
 plot(w2, abs(Yfreq)); grid on; 
+title('Espectro de Frequencia - Sinal pós filtragem')
+xlabel('Frequency(Hz)')
+ylabel('Amplitude');
 
 profile off;
 
