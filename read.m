@@ -17,7 +17,7 @@ duration = length(f)/Fs;
 
 % vetor de tempo
 t = linspace(0, duration, length(f));
-subplot(2,1,1);
+subplot(3,1,1);
 plot(t, f); grid on;
 
 xlabel('Time (seconds)');
@@ -31,7 +31,7 @@ w = (-(N/2):(N/2)-1) * df;
 y = fft(f) / N; 
 y2 = fftshift(y);
 
-subplot(2,1,2);
+subplot(3,1,2);
 plot(w, abs(y2)); grid on; 
 title('Espectro de Frequencia')
 xlabel('Frequency(Hz)')
@@ -39,6 +39,21 @@ ylabel('Amplitude');
 
 % play do audio
 %sound(y,Fs);
+
+%Filtro
+fc = 3750;
+wc = (2*pi*fc)/Fs; % frequência de corte (em rad)
+h = hamming(wc);
+
+yFiltrado = conv(f, h);
+sound(yFiltrado, Fs);
+n = size(yFiltrado,1);
+df = Fs / n;
+w2 = (-(n/2):(n/2)-1) * df;
+Y = fft(yFiltrado) / N; 
+Yfreq = fftshift(Y);
+subplot(3,1,3);
+plot(w2, abs(Yfreq)); grid on; 
 
 profile off;
 
