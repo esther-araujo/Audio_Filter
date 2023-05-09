@@ -5,18 +5,23 @@ profile on;
 clear;
 
 % audioread: lê arquivo e retorna os dados de audio 
-[in_audio,Fs] = audioread('SinalRuidoso.wav');
-num_samp = round(Fs); % Number of samples in a sec
-% Cortando meio segundo do início (remover estouro inicial do audio)
-audiowrite('cut.wav',in_audio(num_samp:end),Fs)
-
-% audioread: lê arquivo e retorna os dados de audio 
 % e a frequencia de amostragem do sinal (em Hz)
 % No caso do arquivo de entrada, Fs = 44,1 KHz
-[f,Fs] = audioread('cut.wav');
+[x,Fs] = audioread('SinalRuidoso.wav');
 
-% Play do audio
-%sound(f, Fs);
+
+% Seções que serão removidas do audio, para deixar só as partes com voz
+duration_to_remove_b = 0.6; % seconds
+duration_to_remove_e = 1.7; % seconds
+
+% Numero de samples que serão removidos
+samples_to_remove_begin = round(duration_to_remove_b * Fs);
+samples_to_remove_end = round(duration_to_remove_e * Fs);
+
+% Remove primeiros x segundos do audio
+y = x(samples_to_remove_begin+1:end,:);
+% Remove os ultimos x segundos do audio
+f = y(1:end-samples_to_remove_end,:);
 
 % os dados do audio (y) são armazenados como uma matriz com linhas
 % correspondentes aos quadros de audio e colunas correspondentes aos canais
@@ -24,7 +29,7 @@ audiowrite('cut.wav',in_audio(num_samp:end),Fs)
 duration = length(f)/Fs;
 
 % vetor de tempo
-t = linspace(0, duration - 0.05, length(f));
+t = linspace(0, duration, length(f));
 N = size(f,1);
 df = Fs / N;
 w = (-(N/2):(N/2)-1) * df;
@@ -32,7 +37,7 @@ y = fft(f) / N;
 y2 = fftshift(y);
 
 %Filtro
-fbp = 2100; % limite banda passante
+fbp = 2600; % limite banda passante
 fbr = 3700; % limite da banda de rejeição
 
 % Janela
@@ -46,9 +51,9 @@ M  = N-1;              % Ordem do Filtro;
 % Janelamento da resposta ideal do filtro - Resposta impulsiva do filtro projetado
 h = hamming(wc, M);
 yFiltrado = conv(h, f);
-sound(yFiltrado, Fs);
 n = size(yFiltrado,1);
 
+audiowrite('SinalFiltrado.wav',yFiltrado,Fs);
 profile off;
 % Plotagens
 subplot(4,1,1);
@@ -57,15 +62,15 @@ plot(t, f); grid on;
 xlabel('Time (seconds)');
 ylabel('Amplitude');
 title('Tempo - Sinal Ruidoso');
-axis([0 0.2 -2 2]);
+axis([0 6 -1.5 1.5]);
 
-tF = linspace(0, duration, length(yFiltrado));
+tF = linspace(0, length(yFiltrado)/Fs, length(yFiltrado));
 subplot(4,1,2);
 plot(tF, yFiltrado); grid on;
 xlabel('Time (seconds)');
 ylabel('Amplitude');
 title('Tempo - Sinal Filtrado');
-axis([0 2 -2 2]);
+axis([0 6 -1.5 1.5]);
 
 subplot(4,1,3);
 plot(w, abs(y2)); grid on; 
