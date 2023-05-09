@@ -1,8 +1,6 @@
 function hd = PB_ideal(wc,M)
 
 %  Filtro passa baixa ideal
-% ----------------------------
-% [hd] = PB_ideal(wc,M)
 % hd = resposta ao impulso ideal entre 0 e M
 % wc = frequencia de corte em radianos
 % M  = Ordem do Filtro

@@ -5,6 +5,6 @@ function [hn] = hamming(wc, M)
     % Equação da janela
     wn = 0.54 - 0.46*cos((2*pi*n)/M);
 
-    % Resposta ao impulso ideal.
+    % Resposta impulsiva do filtro
     hn = hd.*wn;
 end
