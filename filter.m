@@ -45,17 +45,21 @@ wr = (2*pi*fbr)/Fs; % Transição em rads
 wp = (2*pi*fbp)/Fs; % Passagem em rads
 wc = (wr+wp)/2; % Corte em rads
 Bw = abs(wr - wp)/(2*pi); % Largura de transição normalizada
-N  = ceil(3.3/Bw);   % Comprimento da janela
-M  = N-1;              % Ordem do Filtro;
+Nj  = ceil(3.3/Bw);   % Comprimento da janela
+M  = Nj-1;              % Ordem do Filtro;
 
 % Janelamento da resposta ideal do filtro - Resposta impulsiva do filtro projetado
 h = hamming(wc, M);
 yFiltrado = conv(h, f);
 n = size(yFiltrado,1);
 
+% Play do audio
+sound(yFiltrado, Fs);
+
 audiowrite('SinalFiltrado.wav',yFiltrado,Fs);
 profile off;
 % Plotagens
+figure("name","Sinais de Audio");
 subplot(4,1,1);
 plot(t, f); grid on;
 
@@ -80,13 +84,16 @@ ylabel('Amplitude');
 
 df = Fs / n;
 w2 = (-(n/2):(n/2)-1) * df;
-Y = fft(yFiltrado) / N; 
+Y = fft(yFiltrado)/N; 
 Yfreq = fftshift(Y);
 subplot(4,1,4);
 plot(w2, abs(Yfreq)); grid on; 
 title('Espectro de Frequencia - Sinal pós filtragem')
 xlabel('Frequency(Hz)')
 ylabel('Amplitude');
+
+figure("name","Análise do Filtro");
+freqz(h, 1, 512);
 
 T = profile ("info");
 profshow (T);
