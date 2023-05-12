@@ -2,7 +2,8 @@
 % sobre o tempo de execução de cada linha e da quantidade de vezes que cada linha é executada
 % Também mostra o tempo de execução do programa geral
 profile on;
-clear;
+clear all;
+close all;
 
 % audioread: lê arquivo e retorna os dados de audio 
 % e a frequencia de amostragem do sinal (em Hz)
@@ -41,25 +42,25 @@ fbp = 2600; % limite banda passante
 fbr = 3700; % limite da banda de rejeição
 
 % Janela
-wr = (2*pi*fbr)/Fs; % Transição em rads
+wr = (2*pi*fbr)/Fs; % Rejeição em rads
 wp = (2*pi*fbp)/Fs; % Passagem em rads
 wc = (wr+wp)/2; % Corte em rads
 Bw = abs(wr - wp)/(2*pi); % Largura de transição normalizada
-Nj  = ceil(3.3/Bw);   % Comprimento da janela
-M  = Nj-1;              % Ordem do Filtro;
 
 % Janelamento da resposta ideal do filtro - Resposta impulsiva do filtro projetado
-h = hamming(wc, M);
+[h, tipoJanela, ordem] = hamming(wc, Bw);
+%[h, tipoJanela, ordem] = blackman(wc, Bw);
 yFiltrado = conv(h, f);
+audiowrite('SinalFiltrado.wav',yFiltrado,Fs);
+
 n = size(yFiltrado,1);
 
 % Play do audio
-sound(yFiltrado, Fs);
+%sound(yFiltrado, Fs);
 
-audiowrite('SinalFiltrado.wav',yFiltrado,Fs);
 profile off;
 % Plotagens
-figure("name","Sinais de Audio");
+figure("name",strcat('Sinais de Audio - ', tipoJanela));
 subplot(4,1,1);
 plot(t, f); grid on;
 
