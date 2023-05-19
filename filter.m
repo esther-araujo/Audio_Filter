@@ -60,6 +60,13 @@ n = size(yFiltrado,1);
 
 profile off;
 % Plotagens
+
+figure("name","Sinal Original");
+plot(w, abs(y2)); grid on; 
+title('Espectro de Frequencia')
+xlabel('Frequency(Hz)')
+ylabel('Amplitude');
+
 figure("name",strcat('Sinais de Audio - ', tipoJanela));
 subplot(4,1,1);
 plot(t, f); grid on;
@@ -93,7 +100,7 @@ title('Espectro de Frequencia - Sinal pós filtragem')
 xlabel('Frequency(Hz)')
 ylabel('Amplitude');
 
-figure("name","Análise do Filtro");
+figure("name",strcat('Análise do Filtro - ', tipoJanela));
 freqz(h, 1, 512);
 
 T = profile ("info");

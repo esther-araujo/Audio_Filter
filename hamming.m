@@ -10,6 +10,4 @@ function [hn, tipo, M] = hamming(wc, Bw)
 
     % Resposta impulsiva do filtro
     hn = hd.*wn;
-    figure("name","Resposta Impulsiva do Filtro - Hamming");
-    plot(n, hn); grid on;
 end
