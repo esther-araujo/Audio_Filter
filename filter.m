@@ -2,7 +2,7 @@
 % sobre o tempo de execução de cada linha e da quantidade de vezes que cada linha é executada
 % Também mostra o tempo de execução do programa geral
 profile on;
-clear all;
+clear;
 close all;
 
 % audioread: lê arquivo e retorna os dados de audio 
@@ -56,18 +56,18 @@ audiowrite('SinalFiltrado.wav',yFiltrado,Fs);
 n = size(yFiltrado,1);
 
 % Play do audio
-%sound(yFiltrado, Fs);
+sound(yFiltrado, Fs);
 
 profile off;
 % Plotagens
 
-figure("name","Sinal Original");
+figure('name','Sinal Original');
 plot(w, abs(y2)); grid on; 
 title('Espectro de Frequencia')
 xlabel('Frequency(Hz)')
 ylabel('Amplitude');
 
-figure("name",strcat('Sinais de Audio - ', tipoJanela));
+figure('name',strcat('Sinais de Audio - ', tipoJanela));
 subplot(4,1,1);
 plot(t, f); grid on;
 
@@ -100,8 +100,8 @@ title('Espectro de Frequencia - Sinal pós filtragem')
 xlabel('Frequency(Hz)')
 ylabel('Amplitude');
 
-figure("name",strcat('Análise do Filtro - ', tipoJanela));
+figure('name',strcat('Análise do Filtro - ', tipoJanela));
 freqz(h, 1, 512);
 
-T = profile ("info");
-profshow (T);
+%T = profile ('info');
+%profshow (T);
